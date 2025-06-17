@@ -6,7 +6,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"os"
 
 	"github.com/atotto/clipboard"
 	qrterminal "github.com/mdp/qrterminal/v3"
@@ -27,10 +26,17 @@ func main() {
 	fmt.Println("📡 Server available at:", address)
 	fmt.Println("📱 Scan this QR code to connect:")
 
-	// Show QR code in terminal
-	qrterminal.GenerateHalfBlock(address, qrterminal.L)
+	// ✅ Correct usage with Config
+	cfg := qrterminal.Config{
+		Level:     qrterminal.L,
+		Writer:    os.Stdout,
+		BlackChar: qrterminal.HALFBLOCK,
+		WhiteChar: ' ',
+		QuietZone: 1,
+	}
+	qrterminal.GenerateWithConfig(address, cfg)
 
-	// Start HTTP server
+	// Start HTTP clipboard server
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
@@ -56,7 +62,6 @@ func main() {
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }
 
-// getLocalIP attempts to find a non-loopback local IP address.
 func getLocalIP() string {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
