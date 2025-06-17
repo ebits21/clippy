@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+ "os"
 
 	"github.com/atotto/clipboard"
 	qrterminal "github.com/mdp/qrterminal/v3"
