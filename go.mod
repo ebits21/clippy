@@ -1,4 +1,4 @@
-module github.com/ebits21/clipserver
+module github.com/ebits21/clippy
 
 go 1.24.4
 
