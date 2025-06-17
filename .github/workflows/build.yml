@@ -18,17 +18,28 @@ jobs:
     steps:
       - name: 📥 Checkout source
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🛠 Set up latest Go
         uses: actions/setup-go@v5
         with:
           go-version: 'stable'
 
-      - name: 📦 Install dependencies
-        run: |
-          go mod tidy
+      - name: 🧹 Run go mod tidy
+        run: go mod tidy
 
-      - name: 🧱 Build binary
+      - name: ✅ Commit go.mod/go.sum if modified
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          if ! git diff --quiet go.mod go.sum; then
+            git add go.mod go.sum
+            git commit -m "chore: tidy go.mod and go.sum"
+            git push
+          fi
+
+      - name: 📦 Build binary
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
