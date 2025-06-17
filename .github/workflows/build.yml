@@ -1,9 +1,9 @@
-name: Build Clippy Binaries
+name: Build Clippy Binaries (Windows + Linux)
 
 on:
   push:
     tags:
-      - 'v*' # Trigger on version tags like v1.0.0
+      - 'v*'  # build only on version tags
 
 jobs:
   build:
@@ -17,10 +17,6 @@ jobs:
             goarch: amd64
           - goos: linux
             goarch: amd64
-          - goos: darwin
-            goarch: amd64
-          - goos: darwin
-            goarch: arm64  # ✅ M1/M2/M3 Macs
 
     steps:
       - name: 🛎️ Checkout code
@@ -29,7 +25,7 @@ jobs:
       - name: 🔧 Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 'stable'
+          go-version: '1.22'  # specify a recent stable version
 
       - name: 📦 Build binary
         env:
@@ -50,7 +46,7 @@ jobs:
         with:
           name: clippy-${{ matrix.goos }}-${{ matrix.goarch }}
           path: dist/clippy-${{ matrix.goos }}-${{ matrix.goarch }}*
-
+          
   release:
     needs: build
     runs-on: ubuntu-latest
