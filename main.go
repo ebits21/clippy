@@ -31,9 +31,6 @@ func main() {
 	cfg := qrterminal.Config{
 		Level:     qrterminal.L,
 		Writer:    os.Stdout,
-		BlackChar: "▀", // Unicode half-block
-		WhiteChar: " ",
-		QuietZone: 1,
 	}
 	qrterminal.GenerateWithConfig(address, cfg)
 
